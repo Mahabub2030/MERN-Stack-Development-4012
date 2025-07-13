@@ -11,24 +11,6 @@ import generalRoutes from "./routes/general.js";
 import managementRoutes from "./routes/management.js";
 import salesRoutes from "./routes/sales.js";
 
-// Model imports
-import User from "./models/User.js";
-import Product from "./models/Product.js";
-import ProductStat from "./models/ProductStat.js";
-import Transaction from "./models/Transaction.js";
-import OverallStat from "./models/OverallStat.js";
-import AffiliateStat from "./models/AffiliateStat.js";
-
-// Data imports
-import {
-  dataUser,
-  dataProduct,
-  dataProductStat,
-  dataTransaction,
-  dataOverallStat,
-  dataAffiliateStat,
-} from "./data/index.js";
-
 /* CONFIGURATION */
 dotenv.config();
 const app = express();
@@ -46,22 +28,39 @@ app.use("/general", generalRoutes);
 app.use("/management", managementRoutes);
 app.use("/sales", salesRoutes);
 
-/* MONGOOSE SETUP */
-const PORT = process.env.PORT || 9000;
-mongoose
-  .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    app.listen(PORT, () => console.log(`DB connected on server port: ${PORT}`));
 
-    /* ONLY ADD DATA ONE TIME */
-    // AffiliateStat.insertMany(dataAffiliateStat);
-    // OverallStat.insertMany(dataOverallStat);
-    // Product.insertMany(dataProduct);
-    // ProductStat.insertMany(dataProductStat);
-    // Transaction.insertMany(dataTransaction);
-    // User.insertMany(dataUser);
-  })
-  .catch((error) => console.log(`${error} did not connect`));
+const PORT = 4000;
+const Employee = mongoose.model("Employee", new mongoose.Schema({
+  employeeName: String,
+  jobDescription: String,
+  iqamaId: String,
+  dacoId: String,
+  group: String,
+  joiningDate: String,
+  phone: String,
+  email: String,
+  nationality: String,
+  status: String
+}));
+
+app.get("/", (req, res) => {
+  res.send("Welcome to the Home Page!");
+});
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+
+app.get("/employees", async (req, res) => {
+  try {
+    const data = await Employee.find(); // Fetch all employees
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch employees", details: error.message });
+  }
+});
+
+
+
+app.listen(PORT, () => console.log(`DB connected on server port: ${PORT}`));

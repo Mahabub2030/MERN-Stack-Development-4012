@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@mui/material": "^7.2.0",
+    "@mui/x-data-grid": "^8.8.0",
+    "@tailwindcss/vite": "^4.1.11",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
+    "react-data-table-component": "^7.7.0",
+    "tailwindcss": "^4.1.11",
+    "xlsx": "^0.18.5"
+  }
+}
